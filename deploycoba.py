@@ -5,6 +5,7 @@ import re
 from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 import nltk
+import matplotlib.pyplot as plt
 
 nltk.download('stopwords')
 
@@ -163,6 +164,14 @@ if selected_model == "KNN Linguistik" :
             probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
             st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
 
+            # Menampilkan grafik
+            fig, ax = plt.subplots()
+            ax.bar(kelas, probabilitas[0], color=['blue', 'red', 'green'])
+            plt.xlabel('Kategori')
+            plt.ylabel('Probabilitas')
+            plt.title('Probabilitas Prediksi Klasifikasi')
+            st.pyplot(fig)
+
 elif selected_model == "NN Linguistik" :
     # Memuat model dan TfidfVectorizer
     with open('model_nn_linguistik.pkl', 'rb') as model_file:
@@ -202,6 +211,14 @@ elif selected_model == "NN Linguistik" :
             probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
             st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
 
+            # Menampilkan grafik
+            fig, ax = plt.subplots()
+            ax.bar(kelas, probabilitas[0], color=['blue', 'red', 'green'])
+            plt.xlabel('Kategori')
+            plt.ylabel('Probabilitas')
+            plt.title('Probabilitas Prediksi Klasifikasi')
+            st.pyplot(fig)
+
 elif selected_model == "KNN Statistik" :
     # Memuat model dan TfidfVectorizer
     with open('model_knn_statistik.pkl', 'rb') as model_file:
@@ -237,6 +254,14 @@ elif selected_model == "KNN Statistik" :
             probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
             st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
 
+            # Menampilkan grafik
+            fig, ax = plt.subplots()
+            ax.bar(kelas, probabilitas[0], color=['blue', 'red', 'green'])
+            plt.xlabel('Kategori')
+            plt.ylabel('Probabilitas')
+            plt.title('Probabilitas Prediksi Klasifikasi')
+            st.pyplot(fig)
+
 elif selected_model == "NN Statistik" :
     # Memuat model dan TfidfVectorizer
     with open('model_nn_statistik.pkl', 'rb') as model_file:
@@ -271,3 +296,11 @@ elif selected_model == "NN Statistik" :
             kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
             probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
             st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
+
+            # Menampilkan grafik
+            fig, ax = plt.subplots()
+            ax.bar(kelas, probabilitas[0], color=['blue', 'red', 'green'])
+            plt.xlabel('Kategori')
+            plt.ylabel('Probabilitas')
+            plt.title('Probabilitas Prediksi Klasifikasi')
+            st.pyplot(fig)
