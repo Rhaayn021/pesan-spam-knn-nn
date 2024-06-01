@@ -4,6 +4,9 @@ import pickle
 import re
 from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+import nltk
+
+nltk.download('stopwords')
 
 # Membuat instance stemmer
 factory = StemmerFactory()
@@ -11,7 +14,6 @@ stemmer = factory.create_stemmer()
 
 # Load key_norm.csv
 key_norm = pd.read_csv('key_norm.csv')
-
 
 #FITUR STATISTIK
 # Fungsi preprocessing
