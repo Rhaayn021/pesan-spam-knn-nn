@@ -166,7 +166,7 @@ if selected_model == "KNN Linguistik" :
 
             # Menampilkan grafik
             fig, ax = plt.subplots()
-            ax.bar(kelas, probabilitas[0], color=['blue', 'red', 'green'])
+            ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
             plt.xlabel('Kategori')
             plt.ylabel('Probabilitas')
             plt.title('Probabilitas Prediksi Klasifikasi')
@@ -213,7 +213,7 @@ elif selected_model == "NN Linguistik" :
 
             # Menampilkan grafik
             fig, ax = plt.subplots()
-            ax.bar(kelas, probabilitas[0], color=['blue', 'red', 'green'])
+            ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
             plt.xlabel('Kategori')
             plt.ylabel('Probabilitas')
             plt.title('Probabilitas Prediksi Klasifikasi')
@@ -256,7 +256,7 @@ elif selected_model == "KNN Statistik" :
 
             # Menampilkan grafik
             fig, ax = plt.subplots()
-            ax.bar(kelas, probabilitas[0], color=['blue', 'red', 'green'])
+            ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
             plt.xlabel('Kategori')
             plt.ylabel('Probabilitas')
             plt.title('Probabilitas Prediksi Klasifikasi')
@@ -299,7 +299,7 @@ elif selected_model == "NN Statistik" :
 
             # Menampilkan grafik
             fig, ax = plt.subplots()
-            ax.bar(kelas, probabilitas[0], color=['blue', 'red', 'green'])
+            ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
             plt.xlabel('Kategori')
             plt.ylabel('Probabilitas')
             plt.title('Probabilitas Prediksi Klasifikasi')
