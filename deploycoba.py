@@ -224,11 +224,6 @@ elif selected_model == "KNN Statistik" :
             st.markdown(error_box, unsafe_allow_html=True)
         else :
             st.success(f"{detection}")
-            
-        st.subheader('KNN Statistik Classification Report')
-        with open('classification_report_model/report_knn_statistik.txt', 'r') as file:
-            knn_report = file.read()
-        st.text_area("KNN Report", knn_report, height=200)
         
         probabilitas = model_knn_statistik.predict_proba(vectorized_text)
         kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
