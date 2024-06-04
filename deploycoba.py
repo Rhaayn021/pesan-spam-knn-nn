@@ -3,11 +3,9 @@ import pandas as pd
 import pickle
 import re
 from nltk.corpus import stopwords
-from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 import nltk
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 import matplotlib.pyplot as plt
-
-nltk.download('stopwords')
 
 # Membuat instance stemmer
 factory = StemmerFactory()
@@ -15,6 +13,8 @@ stemmer = factory.create_stemmer()
 
 # Load key_norm.csv
 key_norm = pd.read_csv('key_norm.csv')
+
+nltk.download('stopwords')
 
 #FITUR STATISTIK
 # Fungsi preprocessing
@@ -128,179 +128,152 @@ if selected_model == "KNN Linguistik" :
     with open('model_knn_linguistik.pkl', 'rb') as model_file:
         model_knn_linguistik = pickle.load(model_file)
 
-    if st.button('Klasifikasi'):
-        # Kalkulasi fitur linguistik
-        text_features = {
-            'sentence_length': sentence_length(user_input),
-            'capitalized_words': count_capitalized_words(user_input),
-            'cue_phrases_promo': count_cue_phrases(user_input, cue_phrases_promo),
-            'cue_phrases_fraud': count_cue_phrases(user_input, cue_phrases_fraud)
-        }
-        # Siapkan fitur untuk prediksi dalam format array 2D
-        features_linguistic = [list(text_features.values())]
+    # Kalkulasi fitur linguistik
+    text_features = {
+        'sentence_length': sentence_length(user_input),
+        'capitalized_words': count_capitalized_words(user_input),
+        'cue_phrases_promo': count_cue_phrases(user_input, cue_phrases_promo),
+        'cue_phrases_fraud': count_cue_phrases(user_input, cue_phrases_fraud)
+    }
+    # Siapkan fitur untuk prediksi dalam format array 2D
+    features_linguistic = [list(text_features.values())]
 
-        prediksi = model_knn_linguistik.predict(features_linguistic)
+    prediksi = model_knn_linguistik.predict(features_linguistic)
 
-        if not user_input :
-            detection = "Inputan tidak boleh kosong"
-            st.error(detection)
-        else:
-            # Output prediksi
-            kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
-            detection = kelas[prediksi[0]]
-            if prediksi[0]==1 :
-                # Menggunakan HTML di dalam st.markdown dan mengizinkan HTML
-                st.markdown(error_box, unsafe_allow_html=True)
-            else :
-                st.success(f"{detection}")
+    if not user_input :
+        detection = "Inputan tidak boleh kosong"
+        st.error(detection)
+    else:
+        # Output prediksi
+        kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
+        detection = kelas[prediksi[0]]
+        if prediksi[0]==1 :
+            # Menggunakan HTML di dalam st.markdown dan mengizinkan HTML
+            st.markdown(error_box, unsafe_allow_html=True)
+        else :
+            st.success(f"{detection}")
 
-            st.subheader('KNN Linguistik Classification Report')
-            with open('classification_report_model/report_knn_linguistik.txt', 'r') as file:
-                knn_report = file.read()
-            st.text_area("KNN Report", knn_report, height=200)
+        st.subheader('KNN Linguistik Classification Report')
+        with open('classification_report_model/report_knn_linguistik.txt', 'r') as file:
+            knn_report = file.read()
+        st.text_area("KNN Report", knn_report, height=200)
 
-            probabilitas = model_knn_linguistik.predict_proba(features_linguistic)
-            kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
-            probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
-            st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
-
-            # Menampilkan grafik
-            fig, ax = plt.subplots()
-            ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
-            plt.xlabel('Kategori')
-            plt.ylabel('Probabilitas')
-            plt.title('Probabilitas Prediksi Klasifikasi')
-            st.pyplot(fig)
+        probabilitas = model_knn_linguistik.predict_proba(features_linguistic)
+        kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
+        probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
+        st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
 
 elif selected_model == "NN Linguistik" :
     # Memuat model dan TfidfVectorizer
     with open('model_nn_linguistik.pkl', 'rb') as model_file:
         model_nn_linguistik = pickle.load(model_file)
 
-    if st.button('Klasifikasi'):
-        text_baru_linguistik = {}
-        text_baru_linguistik['sentence_length'] = sentence_length(user_input)
-        text_baru_linguistik['capitalized_words'] = count_capitalized_words(user_input)
-        text_baru_linguistik['cue_phrases_promo'] = count_cue_phrases(user_input, cue_phrases_promo)
-        text_baru_linguistik['cue_phrases_fraud'] = count_cue_phrases(user_input, cue_phrases_fraud)
+    text_baru_linguistik = {}
+    text_baru_linguistik['sentence_length'] = sentence_length(user_input)
+    text_baru_linguistik['capitalized_words'] = count_capitalized_words(user_input)
+    text_baru_linguistik['cue_phrases_promo'] = count_cue_phrases(user_input, cue_phrases_promo)
+    text_baru_linguistik['cue_phrases_fraud'] = count_cue_phrases(user_input, cue_phrases_fraud)
 
-        # Siapkan fitur untuk prediksi dalam format array 2D
-        features_linguistic = [list(text_baru_linguistik.values())]
+    # Siapkan fitur untuk prediksi dalam format array 2D
+    features_linguistic = [list(text_baru_linguistik.values())]
 
-        prediksi = model_nn_linguistik.predict(features_linguistic)
+    prediksi = model_nn_linguistik.predict(features_linguistic)
 
-        if not user_input :
-            detection = "Inputan tidak boleh kosong"
-            st.error(detection)
-        else:
-            # Output prediksi
-            kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
-            detection = kelas[prediksi[0]]
-            if prediksi[0]==1 :
-                st.markdown(error_box, unsafe_allow_html=True)
-            else :
-                st.success(f"{detection}")
-            
-            st.subheader('NN Linguistik Classification Report')
-            with open('classification_report_model/report_nn_linguistik.txt', 'r') as file:
-                knn_report = file.read()
-            st.text_area("KNN Report", knn_report, height=200)
-            
-            probabilitas = model_nn_linguistik.predict_proba(features_linguistic)
-            kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
-            probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
-            st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
-
-            # Menampilkan grafik
-            fig, ax = plt.subplots()
-            ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
-            plt.xlabel('Kategori')
-            plt.ylabel('Probabilitas')
-            plt.title('Probabilitas Prediksi Klasifikasi')
-            st.pyplot(fig)
+    if not user_input :
+        detection = "Inputan tidak boleh kosong"
+        st.error(detection)
+    else:
+        # Output prediksi
+        kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
+        detection = kelas[prediksi[0]]
+        if prediksi[0]==1 :
+            st.markdown(error_box, unsafe_allow_html=True)
+        else :
+            st.success(f"{detection}")
+        
+        st.subheader('NN Linguistik Classification Report')
+        with open('classification_report_model/report_nn_linguistik.txt', 'r') as file:
+            knn_report = file.read()
+        st.text_area("KNN Report", knn_report, height=200)
+        
+        probabilitas = model_nn_linguistik.predict_proba(features_linguistic)
+        kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
+        probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
+        st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
 
 elif selected_model == "KNN Statistik" :
     # Memuat model dan TfidfVectorizer
     with open('model_knn_statistik.pkl', 'rb') as model_file:
         model_knn_statistik = pickle.load(model_file)
 
-    if st.button('Klasifikasi'):
-        # Preprocess input pengguna
-        preprocessed_text = preprocess_text(user_input)
-        # Vectorize teks
-        vectorized_text = tfidf_vectorizer.transform([preprocessed_text])
-        # Melakukan prediksi
-        prediksi = model_knn_statistik.predict(vectorized_text)
+    # Preprocess input pengguna
+    preprocessed_text = preprocess_text(user_input)
+    # Vectorize teks
+    vectorized_text = tfidf_vectorizer.transform([preprocessed_text])
+    # Melakukan prediksi
+    prediksi = model_knn_statistik.predict(vectorized_text)
 
-        if not user_input :
-            detection = "Inputan tidak boleh kosong"
-            st.error(detection)
-        else:
-            # Output prediksi
-            kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
-            detection = kelas[prediksi[0]]
-            if prediksi[0]==1 :
-                st.markdown(error_box, unsafe_allow_html=True)
-            else :
-                st.success(f"{detection}")
-                
-            st.subheader('KNN Statistik Classification Report')
-            with open('classification_report_model/report_knn_statistik.txt', 'r') as file:
-                knn_report = file.read()
-            st.text_area("KNN Report", knn_report, height=200)
+    if not user_input :
+        detection = "Inputan tidak boleh kosong"
+        st.error(detection)
+    else:
+        # Output prediksi
+        kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
+        detection = kelas[prediksi[0]]
+        if prediksi[0]==1 :
+            st.markdown(error_box, unsafe_allow_html=True)
+        else :
+            st.success(f"{detection}")
             
-            probabilitas = model_knn_statistik.predict_proba(vectorized_text)
-            kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
-            probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
-            st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
-
-            # Menampilkan grafik
-            fig, ax = plt.subplots()
-            ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
-            plt.xlabel('Kategori')
-            plt.ylabel('Probabilitas')
-            plt.title('Probabilitas Prediksi Klasifikasi')
-            st.pyplot(fig)
+        st.subheader('KNN Statistik Classification Report')
+        with open('classification_report_model/report_knn_statistik.txt', 'r') as file:
+            knn_report = file.read()
+        st.text_area("KNN Report", knn_report, height=200)
+        
+        probabilitas = model_knn_statistik.predict_proba(vectorized_text)
+        kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
+        probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
+        st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
 
 elif selected_model == "NN Statistik" :
     # Memuat model dan TfidfVectorizer
     with open('model_nn_statistik.pkl', 'rb') as model_file:
         model_nn_statistik = pickle.load(model_file)
 
-    if st.button('Klasifikasi'):
-        # Preprocess input pengguna
-        preprocessed_text = preprocess_text(user_input)
-        # Vectorize teks
-        vectorized_text = tfidf_vectorizer.transform([preprocessed_text])
-        # Melakukan prediksi
-        prediksi = model_nn_statistik.predict(vectorized_text)
 
-        if not user_input :
-            detection = "Inputan tidak boleh kosong"
-            st.error(detection)
-        else:
-            # Output prediksi
-            kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
-            detection = kelas[prediksi[0]]
-            if prediksi[0]==1 :
-                st.markdown(error_box, unsafe_allow_html=True)
-            else :
-                st.success(f"{detection}")
+    # Preprocess input pengguna
+    preprocessed_text = preprocess_text(user_input)
+    # Vectorize teks
+    vectorized_text = tfidf_vectorizer.transform([preprocessed_text])
+    # Melakukan prediksi
+    prediksi = model_nn_statistik.predict(vectorized_text)
 
-            st.subheader('Neural Network Statistik Classification Report')
-            with open('classification_report_model/report_nn_statistik.txt', 'r') as file:
-                nn_report = file.read()
-            st.text_area("NN Report", nn_report, height=200)
+    if not user_input :
+        detection = "Inputan tidak boleh kosong"
+        st.error(detection)
+    else:
+        # Output prediksi
+        kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
+        detection = kelas[prediksi[0]]
+        if prediksi[0]==1 :
+            st.markdown(error_box, unsafe_allow_html=True)
+        else :
+            st.success(f"{detection}")
 
-            probabilitas = model_nn_statistik.predict_proba(vectorized_text)
-            kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
-            probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
-            st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
+        st.subheader('Neural Network Statistik Classification Report')
+        with open('classification_report_model/report_nn_statistik.txt', 'r') as file:
+            nn_report = file.read()
+        st.text_area("NN Report", nn_report, height=200)
 
-            # Menampilkan grafik
-            fig, ax = plt.subplots()
-            ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
-            plt.xlabel('Kategori')
-            plt.ylabel('Probabilitas')
-            plt.title('Probabilitas Prediksi Klasifikasi')
-            st.pyplot(fig)
+        probabilitas = model_nn_statistik.predict_proba(vectorized_text)
+        kelas = ["Normal", "Spam Penipuan", "Spam Promo"]
+        probabilitas_bulat = [round(p, 2) for p in probabilitas[0]]
+        st.write("Probabilitas: ", dict(zip(kelas, probabilitas_bulat)))
+        
+        # Menampilkan grafik
+        fig, ax = plt.subplots()
+        ax.bar(kelas, probabilitas[0], color=['#40E0D0', '#800000', '#40E0D0'])
+        plt.xlabel('Kategori')
+        plt.ylabel('Probabilitas')
+        plt.title('Probabilitas Prediksi Klasifikasi')
+        st.pyplot(fig)
